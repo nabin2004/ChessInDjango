@@ -1,0 +1,1 @@
+"""This file is for printing the state of the chess board to see if the board is being updated correctly"""
