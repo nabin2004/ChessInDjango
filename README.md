@@ -20,3 +20,8 @@ To get started with the project, follow these steps:
 4. Run the Django development server.
 
 Enjoy playing chess with Django!
+
+```
+There is the printState.py in the ChessEngine\ dir. It wont be needed later so you can delete it.
+```
+
