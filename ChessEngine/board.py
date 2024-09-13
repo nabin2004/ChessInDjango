@@ -1,14 +1,16 @@
+from piece import Piece
+
 class Board:
     def __init__(self):
         self.grid = {
-            8 : {'a': 'a8', 'b': 'b8', 'c': 'c8', 'd': 'd8', 'e': 'e8', 'f': 'f8', 'g': 'g8', 'h': 'h8'},
-            7 : {'a': 'a7', 'b': 'b7', 'c': 'c7', 'd': 'd7', 'e': 'e7', 'f': 'f7', 'g': 'g7', 'h': 'h7'},
+            8 : {'a': Piece('rook','black','a8'), 'b':  Piece('knight','black','b8'), 'c': Piece('bishop','black','c8'), 'd': Piece('queen','black','d8'), 'e': Piece('king','black','e8'), 'f': Piece('bishop','black','f8'), 'g': Piece('knight','black','g8'), 'h': Piece('rook','black','h8')},
+            7 : {'a': Piece('pawn','black','a7'), 'b': Piece('pawn','black','b7'), 'c': Piece('pawn','black','c7'), 'd': Piece('pawn','black','d7'), 'e': Piece('pawn','black','e7'), 'f': Piece('pawn','black','f7'), 'g': Piece('pawn','black','g7'), 'h': Piece('pawn','black','h7')},
             6 : {'a': 'a6', 'b': 'b6', 'c': 'c6', 'd': 'd6', 'e': 'e6', 'f': 'f6', 'g': 'g6', 'h': 'h6'},
             5 : {'a': 'a5', 'b': 'b5', 'c': 'c5', 'd': 'd5', 'e': 'e5', 'f': 'f5', 'g': 'g5', 'h': 'h5'},
             4 : {'a': 'a4', 'b': 'b4', 'c': 'c4', 'd': 'd4', 'e': 'e4', 'f': 'f4', 'g': 'g4', 'h': 'h4'},
             3 : {'a': 'a3', 'b': 'b3', 'c': 'c3', 'd': 'd3', 'e': 'e3', 'f': 'f3', 'g': 'g3', 'h': 'h3'},
-            2 : {'a': 'a2', 'b': 'b2', 'c': 'c2', 'd': 'd2', 'e': 'e2', 'f': 'f2', 'g': 'g2', 'h': 'h2'},
-            1 : {'a': 'ROOK', 'b': 'b1', 'c': 'c1', 'd': 'd1', 'e': 'e1', 'f': 'f1', 'g': 'g1', 'h': 'h1'},
+            2 : {'a': Piece('pawn','white','a2'), 'b': Piece('pawn','white','b2'), 'c': Piece('pawn','white','c2'), 'd': Piece('pawn','white','d2'), 'e': Piece('pawn','white','e2'), 'f': Piece('pawn','white','f2'), 'g': Piece('pawn','white','g2'), 'h': Piece('pawn','white','h2')},
+            1 : {'a': Piece('rook','white','a1'), 'b': Piece('knight','white','b1'), 'c': Piece('bishop','white','c1'), 'd': Piece('queen','white','d1'), 'e': Piece('king','white','e1'), 'f': Piece('bishop','white','f1'), 'g': Piece('knight','white','g1'), 'h': Piece('rook','white','h1')},
         }
 
     def add_piece(self, piece:str, position:str) -> None:
