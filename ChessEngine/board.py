@@ -8,7 +8,7 @@ class Board:
             6: {'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None},
             5: {'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None},
             4: {'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None},
-            3: {'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None},
+            3: {'a':  None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None},
             2: {'a': Piece('pawn', 'white', 'a2'), 'b': Piece('pawn', 'white', 'b2'), 'c': Piece('pawn', 'white', 'c2'), 'd': Piece('pawn', 'white', 'd2'), 'e': Piece('pawn', 'white', 'e2'), 'f': Piece('pawn', 'white', 'f2'), 'g': Piece('pawn', 'white', 'g2'), 'h': Piece('pawn', 'white', 'h2')},
             1: {'a': Piece('rook', 'white', 'a1'), 'b': Piece('knight', 'white', 'b1'), 'c': Piece('bishop', 'white', 'c1'), 'd': Piece('queen', 'white', 'd1'), 'e': Piece('king', 'white', 'e1'), 'f': Piece('bishop', 'white', 'f1'), 'g': Piece('knight', 'white', 'g1'), 'h': Piece('rook', 'white', 'h1')},
         }
