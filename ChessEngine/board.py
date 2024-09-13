@@ -1,6 +1,5 @@
 class Board:
     def __init__(self):
-        # Initialize the board with empty strings instead of NumPy arrays
         self.grid = {
             8 : {'a': 'a8', 'b': 'b8', 'c': 'c8', 'd': 'd8', 'e': 'e8', 'f': 'f8', 'g': 'g8', 'h': 'h8'},
             7 : {'a': 'a7', 'b': 'b7', 'c': 'c7', 'd': 'd7', 'e': 'e7', 'f': 'f7', 'g': 'g7', 'h': 'h7'},
@@ -12,11 +11,24 @@ class Board:
             1 : {'a': 'a1', 'b': 'b1', 'c': 'c1', 'd': 'd1', 'e': 'e1', 'f': 'f1', 'g': 'g1', 'h': 'h1'},
         }
 
+    def add_piece(self, piece:str, position:str) -> None:
+        alphabet = position[0]
+        number = int(position[1])
+        self.grid[number][alphabet] = str(piece)
+
     def print_board(self):
-        for row in self.grid:
+        for number in range(8, 0, -1):
+            row = ''
+            for alphabet in 'abcdefgh':
+                row += self.grid[number][alphabet] + ' '
             print(row)
 
     def get_box(self, position):
         alphabet = position[0]
         number = int(position[1])
         return self.grid[number][alphabet]
+    
+b = Board()
+b.add_piece('Pawn', 'a2')
+b.add_piece('Pawn', 'a7')
+b.print_board()
