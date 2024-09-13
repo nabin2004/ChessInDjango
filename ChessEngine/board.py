@@ -1,4 +1,4 @@
-from piece import Piece  # Assuming this exists
+from piece import Piece  
 
 class Board:
     def __init__(self):
@@ -32,11 +32,9 @@ class Board:
     
     def move_piece(self):
         pass
-
+    
     def draw_board(self, filename='chessboard.png'):
         from PIL import Image, ImageDraw, ImageFont
-
-        # Unicode symbols for the chess pieces
         piece_symbols = {
             ('king', 'white'): '\u2654',   # White King
             ('queen', 'white'): '\u2655',  # White Queen
@@ -60,7 +58,7 @@ class Board:
         img = Image.new('RGB', (board_size, board_size), color='white')
         draw = ImageDraw.Draw(img)
 
-        # Draw the chess board
+        # Draw the chessboard squares
         for i in range(8):
             for j in range(8):
                 top_left = (j * cell_size, i * cell_size)
@@ -68,13 +66,12 @@ class Board:
                 fill_color = (125, 148, 93) if (i + j) % 2 == 0 else (238, 238, 210)
                 draw.rectangle([top_left, bottom_right], fill=fill_color)
 
-        # Load the font for chess pieces
+        font_path = 'dejavu-sans-bold.ttf'
         try:
-            font = ImageFont.truetype("DejaVuSans-Bold.ttf", 48)
+            font = ImageFont.truetype(font_path, 48)
         except IOError:
             font = ImageFont.load_default()
 
-        # Draw the chess pieces using Unicode symbols
         for number in range(1, 9):
             for alphabet in 'abcdefgh':
                 piece = self.grid[number][alphabet]
@@ -84,13 +81,8 @@ class Board:
                     y = (8 - number) * cell_size + 10
                     draw.text((x, y), symbol, fill="black", font=font)
 
-        # Save the image
         img.save(filename)
 
 
-
-
-
-# Example usage:
 b = Board()
 b.draw_board()
