@@ -1,8 +1,8 @@
-// import './App.css';
-import { Chessboard } from "react-chessboard";
-import { Chess } from "chess.js";
 import { useState, useMemo } from "react";
-
+import { Chessboard } from 'react-chessboard'
+import { Chess } from "chess.js";
+import './App.css';
+import './index.css';
 
 function App() {
   const [game, setGame] = useState(new Chess());
@@ -16,7 +16,7 @@ function App() {
       }) => <div style={{
         width: squareWidth,
         height: squareWidth,
-        backgroundImage: `url(${process.env.PUBLIC_URL}/pieces/${piece}.png)`,
+        backgroundImage: `url(/pieces/${piece}.png)`,
         backgroundSize: "100%"
       }} />;
     });
@@ -48,7 +48,7 @@ function App() {
   }
 
   return (
-    <div className="App h-screen flex justify-center items-center">
+    <div className="App h-full flex justify-center items-center">
       <div className="w-full max-w-md flex justify-center">
       <Chessboard id="StyledBoard" boardOrientation="white" position={game.fen()} onPieceDrop={onDrop} customBoardStyle={{
       borderRadius: "4px",
@@ -63,4 +63,6 @@ function App() {
   );
 }
 
+
 export default App;
+
