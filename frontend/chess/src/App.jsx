@@ -1,8 +1,11 @@
 import { useState, useMemo } from "react";
+import { ThemeProvider } from "./components/ui/theme-provider"
 import { Chessboard } from 'react-chessboard'
 import { Chess } from "chess.js";
 import './App.css';
 import './index.css';
+import { ModeToggle } from "./components/ui/mode-toggle";
+import { Button } from "./components/ui/button"
 
 function App() {
   const [game, setGame] = useState(new Chess());
@@ -48,7 +51,10 @@ function App() {
   }
 
   return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
     <div className="App h-full flex justify-center items-center">
+    <Button>Button</Button>
+    <ModeToggle />
       <div className="w-full max-w-md flex justify-center">
       <Chessboard id="StyledBoard" boardOrientation="white" position={game.fen()} onPieceDrop={onDrop} customBoardStyle={{
       borderRadius: "4px",
@@ -60,6 +66,7 @@ function App() {
     }} customPieces={customPieces} />
       </div>
     </div>
+    </ThemeProvider>
   );
 }
 
