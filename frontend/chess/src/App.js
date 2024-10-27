@@ -50,13 +50,13 @@ function App() {
   return (
     <div className="App h-screen flex justify-center items-center">
       <div className="w-full max-w-md flex justify-center">
-      <Chessboard id="StyledBoard" boardOrientation="black" position={game.fen()} onPieceDrop={onDrop} customBoardStyle={{
+      <Chessboard id="StyledBoard" boardOrientation="white" position={game.fen()} onPieceDrop={onDrop} customBoardStyle={{
       borderRadius: "4px",
       boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)"
     }} customDarkSquareStyle={{
-      backgroundColor: "#779952"
+      backgroundColor: "#008B8B"
     }} customLightSquareStyle={{
-      backgroundColor: "#edeed1"
+      backgroundColor: "#FCEAC7"
     }} customPieces={customPieces} />
       </div>
     </div>
