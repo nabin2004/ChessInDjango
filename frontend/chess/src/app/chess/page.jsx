@@ -6,6 +6,7 @@ import { Chess } from "chess.js";
 import { Chessboard } from 'react-chessboard'
 import { ModeToggle } from "@/components/ui/mode-toggle"; 
 import { ThemeProvider } from '@/components/theme-provider';
+import DemoPage from '../page';
 
 
 export default function Home() {
@@ -40,7 +41,7 @@ export default function Home() {
     });
 
     if (move === null) {
-      alert("Invalid move! Please try again.");
+
       return false;
     }
 
@@ -71,6 +72,8 @@ export default function Home() {
             }}
             customPieces={customPieces}
           />
+          <DemoPage />
+
         </div>
         </ThemeProvider>
   );
