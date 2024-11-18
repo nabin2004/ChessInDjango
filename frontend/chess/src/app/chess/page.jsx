@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useMemo, useEffect, useRef } from "react";
+import axios from 'axios';
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -14,7 +15,7 @@ import {
 export default function Home() {
   const [game, setGame] = useState(new Chess());
   const [position, setPosition] = useState(game.fen());
-  const [lobbyId, setLobbyId] = useState(); 
+  const [lobbyId, setLobbyId] = useState();
   const [lastMove, setLastMove] = useState(null);
   const [selectedSquare, setSelectedSquare] = useState(null);
 
@@ -26,6 +27,30 @@ export default function Home() {
   const gameEndSound = useRef(new Audio('/sounds/game-end.mp3'));
   const illegalSound = useRef(new Audio('/sounds/illegal.mp3'));
   const checkSound = useRef(new Audio('/sounds/move-check.mp3'));
+
+  // Fetch the FEN position from the backend
+  useEffect(() => {
+    const fetchFenPosition = async () => {
+      if (!lobbyId) {
+        console.error("Lobby ID is not set.");
+        return;
+      }
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/get-fen");
+        if (response.data.fen_position) {
+          setPosition(response.data.fen_position);
+          console.log(position)
+        } else {
+          console.error(response.data.error || "Unknown error");
+        }
+      } catch (error) {
+        console.error("Error fetching FEN position:", error);
+      }
+    };
+
+    fetchFenPosition();
+  }, [lobbyId]);
+
 
   // Initialize WebSocket connection and join a lobby
   useEffect(() => {
@@ -83,7 +108,7 @@ export default function Home() {
 
     if (ws.current && ws.current.readyState === WebSocket.OPEN) {
       ws.current.send(
-        JSON.stringify({ sourceSquare, targetSquare })
+        JSON.stringify({ sourceSquare, targetSquare, position })
       );
     }
 
@@ -97,12 +122,17 @@ export default function Home() {
   }
 
   function handleLobbyChange(newLobbyId) {
-    if (ws.current) {
-      ws.current.close();
+    if (newLobbyId.length === 6) {
+      if (ws.current) {
+        ws.current.close();
+      }
+      setLobbyId(newLobbyId);
+      setGame(new Chess());
+      setPosition(game.fen());
+      
+    }else {
+      console.log("Lobby ID must be exactly 6 characters.");
     }
-    setLobbyId(newLobbyId);
-    setGame(new Chess()); 
-    setPosition(game.fen());
   }
 
   const customPieces = useMemo(() => {
@@ -130,7 +160,7 @@ export default function Home() {
         <div className="lobby-controls">
           <InputOTP
             maxLength={6}
-            onChange={(value) => handleLobbyChange(value)} 
+            onChange={(value) => handleLobbyChange(value)}
           >
             <InputOTPGroup>
               <InputOTPSlot index={0} />
