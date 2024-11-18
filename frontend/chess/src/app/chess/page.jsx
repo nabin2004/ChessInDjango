@@ -4,14 +4,21 @@ import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 export default function Home() {
   const [game, setGame] = useState(new Chess());
   const [position, setPosition] = useState(game.fen());
-  const [lastMove, setLastMove] = useState(null); // Track the last move
-  const [selectedSquare, setSelectedSquare] = useState(null); // Track the selected square
+  const [lobbyId, setLobbyId] = useState(); 
+  const [lastMove, setLastMove] = useState(null);
+  const [selectedSquare, setSelectedSquare] = useState(null);
 
-  const ws = useRef(null); // Ref for WebSocket
+  const ws = useRef(null);
 
   const moveSound = useRef(new Audio('/sounds/move-self.mp3'));
   const captureSound = useRef(new Audio('/sounds/capture.mp3'));
@@ -19,13 +26,11 @@ export default function Home() {
   const gameEndSound = useRef(new Audio('/sounds/game-end.mp3'));
   const illegalSound = useRef(new Audio('/sounds/illegal.mp3'));
   const checkSound = useRef(new Audio('/sounds/move-check.mp3'));
-  const premoveSound = useRef(new Audio('/sounds/premove.mp3'));
 
-  // Initialize WebSocket connection when the component mounts
+  // Initialize WebSocket connection and join a lobby
   useEffect(() => {
-    ws.current = new WebSocket("ws://localhost:8000/ws");
+    ws.current = new WebSocket(`ws://localhost:8000/ws/lobby/${lobbyId}`);
 
-    // Handle incoming messages
     ws.current.onmessage = (event) => {
       const { sourceSquare, targetSquare } = JSON.parse(event.data);
       const newMove = game.move({
@@ -36,25 +41,23 @@ export default function Home() {
 
       if (newMove) {
         setPosition(game.fen());
-        setLastMove({ from: sourceSquare, to: targetSquare }); // Track the last move
-        // Play sound for move
+        setLastMove({ from: sourceSquare, to: targetSquare });
+
         if (newMove.captured) {
           captureSound.current.play();
         } else if (newMove.flags.includes('k') || newMove.flags.includes('q')) {
-          castlingSound.current.play(); // Castling sound
+          castlingSound.current.play();
         } else {
           moveSound.current.play();
         }
       }
     };
 
-    // Clean up WebSocket on component unmount
     return () => {
       ws.current.close();
     };
-  }, [game]);
+  }, [game, lobbyId]);
 
-  // Handle moves on the board
   function onDrop(sourceSquare, targetSquare) {
     const move = game.move({
       from: sourceSquare,
@@ -63,15 +66,13 @@ export default function Home() {
     });
 
     if (move === null) {
-      illegalSound.current.play(); // Play illegal move sound
+      illegalSound.current.play();
       return false;
     }
 
-    // Update board state and send the move to the WebSocket server
     setPosition(game.fen());
-    setLastMove({ from: sourceSquare, to: targetSquare }); // Track the last move
+    setLastMove({ from: sourceSquare, to: targetSquare });
 
-    // Play sound based on whether a piece was captured or if it's a special move
     if (move.captured) {
       captureSound.current.play();
     } else if (move.flags.includes('k') || move.flags.includes('q')) {
@@ -86,42 +87,27 @@ export default function Home() {
       );
     }
 
-    // Check for game end conditions (checkmate or stalemate)
     if (game.in_checkmate()) {
-      gameEndSound.current.play(); // Play game end sound
+      gameEndSound.current.play();
     } else if (game.in_check()) {
-      checkSound.current.play(); // Play check sound
+      checkSound.current.play();
     }
 
     return true;
   }
 
-  // Handle click-to-move logic
-  function handleSquareClick(square) {
-    if (selectedSquare) {
-      const move = game.move({
-        from: selectedSquare,
-        to: square,
-        promotion: "q",
-      });
-
-      if (move) {
-        onDrop(selectedSquare, square); // Call the drop handler
-        setSelectedSquare(null); // Deselect
-      } else {
-        illegalSound.current.play(); // Play illegal move sound
-        setSelectedSquare(null); // Deselect on illegal move
-      }
-    } else {
-      // Select the square
-      setSelectedSquare(square);
+  function handleLobbyChange(newLobbyId) {
+    if (ws.current) {
+      ws.current.close();
     }
+    setLobbyId(newLobbyId);
+    setGame(new Chess()); 
+    setPosition(game.fen());
   }
-
-  const pieces = ["wP", "wN", "wB", "wR", "wQ", "wK", "bP", "bN", "bB", "bR", "bQ", "bK"];
 
   const customPieces = useMemo(() => {
     const pieceComponents = {};
+    const pieces = ["wP", "wN", "wB", "wR", "wQ", "wK", "bP", "bN", "bB", "bR", "bQ", "bK"];
     pieces.forEach((piece) => {
       pieceComponents[piece] = ({ squareWidth }) => (
         <div
@@ -137,17 +123,29 @@ export default function Home() {
     return pieceComponents;
   }, []);
 
-  function onSquareRightClick(square) {
-    // Additional logic can be added here if required
-  }
-
   return (
     <ThemeProvider>
       <ModeToggle />
       <div className="m-10 w-screen max-w-xl flex justify-center items-center">
+        <div className="lobby-controls">
+          <InputOTP
+            maxLength={6}
+            onChange={(value) => handleLobbyChange(value)} 
+          >
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+            </InputOTPGroup>
+            <InputOTPSeparator />
+            <InputOTPGroup>
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+              <InputOTPSlot index={5} />
+            </InputOTPGroup>
+          </InputOTP>
+        </div>
         <Chessboard
-          onSquareRightClick={onSquareRightClick}
-          onSquareClick={handleSquareClick}
           position={position}
           onPieceDrop={onDrop}
           customBoardStyle={{
@@ -161,9 +159,6 @@ export default function Home() {
             backgroundColor: "#FCEAC7",
           }}
           customPieces={customPieces}
-          areArrowsAllowed={true}
-          highlightSquare={lastMove ? [lastMove.from, lastMove.to] : []} // Highlight last move squares
-          selectedSquare={selectedSquare} // Highlight the selected square
         />
       </div>
     </ThemeProvider>
