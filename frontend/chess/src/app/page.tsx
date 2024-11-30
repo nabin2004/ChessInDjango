@@ -14,7 +14,7 @@ export default function DemoPage() {
         <br/>
         <div className="flex justify-center gap-4">
             <Button variant="default" size="icon" className="w-full max-w-xs" asChild>
-            <a href="/chess">Start Playing</a>
+            <a href="/roomfinder">Start Playing</a>
             </Button>
           <Button variant="secondary" size="icon" className="w-full max-w-xs">
             Learn More
