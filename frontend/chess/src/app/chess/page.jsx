@@ -5,12 +5,7 @@ import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
+
 
 export default function Home() {
   const [game, setGame] = useState(new Chess());
@@ -121,19 +116,6 @@ export default function Home() {
     return true;
   }
 
-  function handleLobbyChange(newLobbyId) {
-    if (newLobbyId.length === 6) {
-      if (ws.current) {
-        ws.current.close();
-      }
-      setLobbyId(newLobbyId);
-      setGame(new Chess());
-      setPosition(game.fen());
-      
-    }else {
-      console.log("Lobby ID must be exactly 6 characters.");
-    }
-  }
 
   const customPieces = useMemo(() => {
     const pieceComponents = {};
@@ -154,27 +136,8 @@ export default function Home() {
   }, []);
 
   return (
-    <ThemeProvider>
-      <ModeToggle />
       <div className="m-10 w-screen max-w-xl flex justify-center items-center">
-        <div className="lobby-controls">
-          <InputOTP
-            maxLength={6}
-            onChange={(value) => handleLobbyChange(value)}
-          >
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-            </InputOTPGroup>
-            <InputOTPSeparator />
-            <InputOTPGroup>
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
+
         <Chessboard
           position={position}
           onPieceDrop={onDrop}
@@ -191,6 +154,5 @@ export default function Home() {
           customPieces={customPieces}
         />
       </div>
-    </ThemeProvider>
   );
 }
