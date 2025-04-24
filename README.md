@@ -5,7 +5,6 @@ This is a chess game implemented using Django as the backend framework.
 
 ## Project Structure
 
-- `meroenv`: This directory contains the Python virtual environment for the project.
 - `chess`: This is the main project directory.
     - `chess`: This directory contains the main Django project.
     - `accounts`: This directory contains the app responsible for handling login and signup functionality.
